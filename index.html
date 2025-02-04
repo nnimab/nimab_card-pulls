@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抽卡系統</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="scripts/main.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>抽卡系統 V1.1.0</h1>
+        <p class="subtitle">點擊或觸摸卡牌進行抽取</p>
+    </header>
+    
+    <main>
+        <div class="cards-container">
+            <!-- 左側扇形卡牌區域 -->
+            <div class="fan-cards">
+                <!-- 卡片類型選擇區域 -->
+                <div class="card-type-selector">
+                    <button class="type-btn" data-type="yijing">易經卦卡</button>
+                    <button class="type-btn" data-type="character">人物卡</button>
+                    <button class="type-btn" data-type="spacetime">時空卡</button>
+                </div>
+                <!-- 扇形卡牌區域 -->
+                <div class="fan-area" id="fanCards">
+                    <!-- 卡牌將由 JavaScript 動態生成 -->
+                    <div class="confirm-dialog">
+                        <span>確定?</span>
+                        <button class="confirm-btn">確定</button>
+                        <button class="cancel-btn">取消</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 中央展示區域 -->
+            <div class="display-area">
+                <div class="card-slots-container">
+                    <div class="card-slots yijing-slots">
+                        <h3>易經卦卡</h3>
+                        <div class="slots-row">
+                            <div class="card-slot"></div>
+                            <div class="card-slot"></div>
+                            <div class="card-slot"></div>
+                            <div class="card-slot"></div>
+                            <div class="card-slot"></div>
+                        </div>
+                    </div>
+                    <div class="card-slots character-slots">
+                        <h3>人物卡</h3>
+                        <div class="slots-row">
+                            <div class="card-slot"></div>
+                            <div class="card-slot"></div>
+                            <div class="card-slot"></div>
+                            <div class="card-slot"></div>
+                            <div class="card-slot"></div>
+                        </div>
+                    </div>
+                    <div class="card-slots spacetime-slots">
+                        <h3>時空卡</h3>
+                        <div class="slots-row">
+                            <div class="card-slot"></div>
+                            <div class="card-slot"></div>
+                            <div class="card-slot"></div>
+                            <div class="card-slot"></div>
+                            <div class="card-slot"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="clear-btn">清除所有卡片</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 設置按鈕 -->
+    <div class="settings">
+        <button id="toggleSound" class="settings-btn" title="音效開關">
+            <span class="sound-on">🔊</span>
+            <span class="sound-off">🔇</span>
+        </button>
+    </div>
+
+    <div class="overlay"></div>
+</body>
+</html> 

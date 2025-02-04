@@ -1,0 +1,949 @@
+:root {
+    --primary-color: #1a1a1a;
+    --accent-color: #00ffff;
+    --card-width: 120px;
+    --card-height: 180px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    font-family: 'Microsoft JhengHei', sans-serif;
+    color: white;
+    overflow: hidden;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 3rem;
+    margin: 0;
+    color: var(--accent-color);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+.cards-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px);
+    margin-top: -20px;
+    position: relative;
+}
+
+.fan-cards {
+    position: relative;
+    width: 50%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    perspective: 1000px;
+    z-index: 1100;
+}
+
+.fan-area {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    position: absolute;
+    width: var(--card-width);
+    height: var(--card-height);
+    border: 2px solid;
+    background-size: cover;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transform-origin: center 150%;
+    left: 50%;
+    top: calc(50% + var(--card-height) * 0.3);
+    transform: translate(-50%, -50%) 
+               rotate(var(--rotation)) 
+               translateY(calc(var(--radius) * 1px));
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 1;
+}
+
+.card[data-card-type="yijing"] {
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    border-color: #00ffff;
+}
+
+.card[data-card-type="spacetime"] {
+    background: linear-gradient(45deg, #4b134f, #c94b4b);
+    border-color: #ff6b6b;
+}
+
+.card[data-card-type="character"] {
+    background: linear-gradient(45deg, #134e5e, #71b280);
+    border-color: #4cd137;
+}
+
+.card::before {
+    content: var(--symbol, '★');
+    font-size: 3em;
+    color: inherit;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.card[data-card-type="spacetime"]::before {
+    font-size: 4em;
+}
+
+.card[data-card-type="character"]::before {
+    font-size: 3.5em;
+}
+
+.card:hover {
+    transform: translate(-50%, -50%) 
+               rotate(var(--rotation)) 
+               translateY(calc(var(--radius) * 1px))
+               scale(1.2);
+    z-index: 2;
+}
+
+.card:active {
+    /* 移除原本的效果 */
+}
+
+.display-area {
+    width: 50%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    scroll-behavior: smooth;
+}
+
+.card-slots-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.card-slots {
+    width: 100%;
+}
+
+.card-slots h3 {
+    text-align: center;
+    margin-bottom: 5px;
+    font-size: 1.1em;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+.yijing-slots h3 {
+    color: #00ffff;
+}
+
+.spacetime-slots h3 {
+    color: #ff6b6b;
+}
+
+.character-slots h3 {
+    color: #4cd137;
+}
+
+.slots-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 5px;
+}
+
+.card-slot {
+    width: calc(var(--card-width) * 0.8);
+    height: calc(var(--card-height) * 0.8);
+    border: 2px dashed var(--accent-color);
+    border-radius: 10px;
+    opacity: 0.5;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.yijing-slots .card-slot {
+    border-color: #00ffff;
+}
+
+.spacetime-slots .card-slot {
+    border-color: #ff6b6b;
+}
+
+.character-slots .card-slot {
+    border-color: #4cd137;
+}
+
+.settings {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.settings-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.sound-off {
+    display: none;
+}
+
+/* 優化後的響應式設計：行動裝置模式 */
+@media (max-width: 768px) {
+    html, body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: 100%;
+        position: relative;
+        overscroll-behavior: none;
+    }
+    
+    header {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .cards-container {
+        flex-direction: column;
+        height: auto;
+        min-height: calc(100vh - 80px);
+        margin-top: 0;
+        gap: 10px;
+        padding: 10px;
+        position: relative;
+        overflow-y: visible;
+    }
+
+    .fan-cards {
+        width: 100%;
+        height: 50vh;
+        min-height: 300px;
+        max-height: 400px;
+        margin-bottom: 20px;
+        touch-action: none;
+    }
+
+    .display-area {
+        width: 95%;
+        height: auto;
+        max-height: none;
+        padding: 10px;
+        margin-bottom: 70px;
+        overflow-y: visible;
+        touch-action: pan-y pinch-zoom;
+    }
+
+    .card-type-selector {
+        position: relative;
+        z-index: 1200;
+        margin: 10px 0;
+        padding: 0 5px;
+    }
+
+    .type-btn {
+        padding: 8px 12px;
+        font-size: 0.9em;
+        min-width: 80px;
+    }
+
+    .card {
+        transform-origin: center 120%;
+        --card-width: 100px;
+        --card-height: 150px;
+    }
+
+    .card-slots-container {
+        gap: 15px;
+        overflow: visible;
+    }
+
+    .slots-row {
+        gap: 8px;
+        padding: 5px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .card-slot {
+        width: calc(var(--card-width) * 0.7);
+        height: calc(var(--card-height) * 0.7);
+        margin: 2px;
+    }
+
+    .settings {
+        bottom: 15px;
+        right: 15px;
+    }
+
+    .confirm-dialog {
+        bottom: 15%;
+        padding: 10px 15px;
+    }
+
+    .confirm-dialog button {
+        padding: 6px 15px;
+        font-size: 0.9em;
+    }
+
+    .clear-btn {
+        position: fixed;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        min-width: 100px;
+        padding: 8px 20px;
+        font-size: 1em;
+        z-index: 1200;
+        margin: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --card-width: 80px;
+        --card-height: 120px;
+    }
+
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+    }
+
+    .fan-cards {
+        height: 45vh;
+        min-height: 250px;
+    }
+
+    .card-slots-container {
+        gap: 12px;
+    }
+
+    .slots-row {
+        gap: 6px;
+    }
+
+    .card-slot {
+        width: calc(var(--card-width) * 0.8);
+        height: calc(var(--card-height) * 0.8);
+    }
+
+    .card-slots h3 {
+        font-size: 0.9em;
+        margin: 5px 0;
+    }
+
+    .type-btn {
+        padding: 6px 10px;
+        font-size: 0.8em;
+        min-width: 70px;
+    }
+
+    .clear-btn {
+        min-width: 90px;
+        padding: 8px 15px;
+        font-size: 0.9em;
+        bottom: 10px;
+    }
+}
+
+/* 新增超小螢幕的支援 */
+@media (max-width: 360px) {
+    :root {
+        --card-width: 70px;
+        --card-height: 105px;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .fan-cards {
+        height: 40vh;
+        min-height: 200px;
+    }
+
+    .card-slot {
+        width: calc(var(--card-width) * 0.9);
+        height: calc(var(--card-height) * 0.9);
+    }
+
+    .type-btn {
+        padding: 5px 8px;
+        font-size: 0.8em;
+        min-width: 60px;
+    }
+
+    .clear-btn {
+        min-width: 80px;
+        padding: 6px 12px;
+        font-size: 0.85em;
+    }
+}
+
+/* 動畫效果 */
+@keyframes fadeOut {
+    0% {
+        transform: translate(-50%, -50%) 
+                   rotate(var(--rotation)) 
+                   translateY(calc(var(--radius) * 1px));
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) 
+                   rotate(var(--rotation)) 
+                   translateY(calc(var(--radius) * 1px));
+        opacity: 0;
+    }
+}
+
+.drawing {
+    animation: fadeOut 0.3s ease-out forwards;
+    pointer-events: none;
+}
+
+.card.drawn {
+    width: 100%;
+    height: 100%;
+    font-size: 1.6em;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--accent-color);
+    border-radius: 10px;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.card.drawn::before {
+    display: none;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 1000;
+}
+
+.overlay.active {
+    display: block;
+}
+
+/* 當確認框顯示時，未選中的卡片變暗 */
+.confirming .card:not(.selected) {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* 被選中的卡片 */
+.card.selected[data-card-type="yijing"] {
+    box-shadow: 0 0 30px #00ffff;
+}
+
+.card.selected[data-card-type="spacetime"] {
+    box-shadow: 0 0 30px #ff6b6b;
+}
+
+.card.selected[data-card-type="character"] {
+    box-shadow: 0 0 30px #4cd137;
+}
+
+.confirm-dialog {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px 20px;
+    border-radius: 10px;
+    display: none;
+    z-index: 1200;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 20%;
+    white-space: nowrap;
+}
+
+.confirm-dialog.active {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.confirm-dialog button {
+    padding: 8px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    transition: transform 0.2s ease;
+    position: relative;
+    z-index: 1200;
+}
+
+.confirm-dialog button:hover {
+    transform: scale(1.05);
+}
+
+.confirm-btn {
+    background: #ff6b4a;
+    color: white;
+}
+
+.cancel-btn {
+    background: #808080;
+    color: black;
+}
+
+.confirm-dialog span {
+    color: white;
+    position: relative;
+    z-index: 1200;
+}
+
+.clear-btn {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 25px;
+    font-size: 1.1em;
+    background: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 71, 87, 0.3);
+    z-index: 1000;
+    margin: 0;
+    width: auto;
+    min-width: 120px;
+    text-align: center;
+}
+
+.clear-btn:hover {
+    transform: translateX(-50%) scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);
+}
+
+.clear-btn:active {
+    transform: translateX(-50%) scale(0.95);
+}
+
+.clear-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+    transform: translateX(-50%);
+    box-shadow: none;
+}
+
+/* 卡片詳細視圖 */
+.card-detail-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    display: none;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.card-detail-view.active {
+    display: block;
+}
+
+.card-detail-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    color: white;
+    position: relative;
+}
+
+.scroll-hint {
+    text-align: center;
+    padding: 20px 0;
+    color: var(--accent-color);
+    font-size: 1.2em;
+    opacity: 0.8;
+    cursor: pointer;
+    animation: pulse 2s infinite;
+    margin: 20px 0;
+    position: relative;
+}
+
+.scroll-hint::after {
+    content: '↓';
+    display: block;
+    font-size: 1.5em;
+    margin-top: 5px;
+    animation: float 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.4;
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.card-detail-image {
+    width: 400px;
+    height: 600px;
+    margin: 0 auto 20px;
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    border: 4px solid var(--accent-color);
+    border-radius: 20px;
+    position: relative;
+    font-size: 6em;
+    color: white;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+}
+
+.card-detail-image .inner-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-detail-text {
+    font-size: 1.2em;
+    line-height: 1.4;
+    white-space: pre-line;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    margin-top: 20px;
+    scroll-margin-top: 20px;
+}
+
+/* Markdown 樣式 */
+.card-detail-text h1 {
+    color: var(--accent-color);
+    font-size: 1.8em;
+    margin-bottom: 0.3em;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 0.2em;
+}
+
+.card-detail-text h2 {
+    color: var(--accent-color);
+    font-size: 1.4em;
+    margin-top: 1em;
+    margin-bottom: 0.3em;
+}
+
+.card-detail-text ul, 
+.card-detail-text ol {
+    margin-left: 1.2em;
+    margin-bottom: 0.8em;
+}
+
+.card-detail-text li {
+    margin-bottom: 0.3em;
+    line-height: 1.4;
+}
+
+.card-detail-text p {
+    margin-bottom: 0.8em;
+    line-height: 1.4;
+}
+
+.card-detail-text strong {
+    color: var(--accent-color);
+}
+
+.close-detail-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2em;
+    cursor: pointer;
+    z-index: 2001;
+}
+
+.close-detail-btn:hover {
+    color: var(--accent-color);
+}
+
+/* 卡片類型選擇區域 */
+.card-type-selector {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 0;
+    z-index: 1150;
+}
+
+.type-btn {
+    padding: 6px 12px;
+    font-size: 0.9em;
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    color: white;
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+    min-width: auto;
+    text-align: center;
+}
+
+.type-btn[data-type="yijing"] {
+    border-color: #00ffff;
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.type-btn[data-type="spacetime"] {
+    border-color: #ff6b6b;
+    background: linear-gradient(45deg, #4b134f, #c94b4b);
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.2);
+}
+
+.type-btn[data-type="character"] {
+    border-color: #4cd137;
+    background: linear-gradient(45deg, #134e5e, #71b280);
+    box-shadow: 0 0 15px rgba(76, 209, 55, 0.2);
+}
+
+.type-btn:hover {
+    transform: translateY(-2px);
+}
+
+.type-btn[data-type="yijing"]:hover {
+    box-shadow: 0 0 15px #00ffff;
+}
+
+.type-btn[data-type="spacetime"]:hover {
+    box-shadow: 0 0 15px #ff6b6b;
+}
+
+.type-btn[data-type="character"]:hover {
+    box-shadow: 0 0 15px #4cd137;
+}
+
+.type-btn.active[data-type="yijing"] {
+    box-shadow: 0 0 20px #00ffff;
+}
+
+.type-btn.active[data-type="spacetime"] {
+    box-shadow: 0 0 20px #ff6b6b;
+}
+
+.type-btn.active[data-type="character"] {
+    box-shadow: 0 0 20px #4cd137;
+}
+
+/* 抽出的卡片 */
+.card.drawn[data-card-type="yijing"] {
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    border-color: #00ffff;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.card.drawn[data-card-type="spacetime"] {
+    background: linear-gradient(45deg, #4b134f, #c94b4b);
+    border-color: #ff6b6b;
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
+}
+
+.card.drawn[data-card-type="character"] {
+    background: linear-gradient(45deg, #134e5e, #71b280);
+    border-color: #4cd137;
+    box-shadow: 0 0 15px rgba(76, 209, 55, 0.3);
+}
+
+.card-detail-image[data-card-type="yijing"] {
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    border-color: #00ffff;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+}
+
+.card-detail-image[data-card-type="spacetime"] {
+    background: linear-gradient(45deg, #4b134f, #c94b4b);
+    border-color: #ff6b6b;
+    box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+}
+
+.card-detail-image[data-card-type="character"] {
+    background: linear-gradient(45deg, #134e5e, #71b280);
+    border-color: #4cd137;
+    box-shadow: 0 0 30px rgba(76, 209, 55, 0.3);
+}
+
+.card-detail-view[data-card-type="yijing"] .scroll-hint {
+    color: #00ffff;
+}
+
+.card-detail-view[data-card-type="spacetime"] .scroll-hint {
+    color: #ff6b6b;
+}
+
+.card-detail-view[data-card-type="character"] .scroll-hint {
+    color: #4cd137;
+}
+
+.card-detail-view[data-card-type="yijing"] .card-detail-text h1,
+.card-detail-view[data-card-type="yijing"] .card-detail-text h2,
+.card-detail-view[data-card-type="yijing"] .card-detail-text strong {
+    color: #00ffff;
+}
+
+.card-detail-view[data-card-type="spacetime"] .card-detail-text h1,
+.card-detail-view[data-card-type="spacetime"] .card-detail-text h2,
+.card-detail-view[data-card-type="spacetime"] .card-detail-text strong {
+    color: #ff6b6b;
+}
+
+.card-detail-view[data-card-type="character"] .card-detail-text h1,
+.card-detail-view[data-card-type="character"] .card-detail-text h2,
+.card-detail-view[data-card-type="character"] .card-detail-text strong {
+    color: #4cd137;
+}
+
+.card-detail-view[data-card-type="yijing"] .close-detail-btn:hover {
+    color: #00ffff;
+}
+
+.card-detail-view[data-card-type="spacetime"] .close-detail-btn:hover {
+    color: #ff6b6b;
+}
+
+.card-detail-view[data-card-type="character"] .close-detail-btn:hover {
+    color: #4cd137;
+}
+
+.card-detail-view[data-card-type="yijing"] .card-detail-text h1 {
+    border-bottom-color: #00ffff;
+}
+
+.card-detail-view[data-card-type="spacetime"] .card-detail-text h1 {
+    border-bottom-color: #ff6b6b;
+}
+
+.card-detail-view[data-card-type="character"] .card-detail-text h1 {
+    border-bottom-color: #4cd137;
+}
+
+/* 修改行動裝置版的卡片詳細視圖，利用 padding 維持 2:3 比例 */
+@media (max-width: 768px) {
+    .card-detail-view {
+        padding: 10px;
+        overflow-x: hidden;
+    }
+    .card-detail-content {
+        max-width: 100%;
+        padding: 10px;
+    }
+    .card-detail-image {
+        width: 90%;
+        max-width: 300px;
+        height: 0;
+        padding-top: 150%;
+        margin: 0 auto 20px;
+    }
+    
+    .card-detail-image .inner-content {
+        font-size: 0.8em;
+    }
+    .card-detail-text {
+        font-size: 1em;
+    }
+} 
