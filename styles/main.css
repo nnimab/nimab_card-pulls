@@ -1,57 +1,101 @@
 :root {
-    --primary-color: #1a1a1a;
-    --accent-color: #00ffff;
+    --primary-color: #0a0e17;
+    --secondary-color: #1a2233;
+    --accent-color: #00e5ff;
+    --gold-color: #ffd700;
     --card-width: 120px;
     --card-height: 180px;
+    --border-glow: 0 0 10px var(--accent-color);
+    --text-shadow: 0 0 8px var(--accent-color);
 }
 
 body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    background: url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1964&auto=format&fit=crop') no-repeat center center fixed;
+    background-size: cover;
     font-family: 'Microsoft JhengHei', sans-serif;
     color: white;
     overflow-y: auto;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(10, 14, 23, 0.9) 0%, rgba(26, 34, 51, 0.85) 100%);
+    z-index: -1;
 }
 
 header {
     text-align: center;
-    padding: 20px;
+    padding: 20px 0 10px 0;
+    position: relative;
+    z-index: 10;
+    width: 50%;
+    margin: 0 auto 0 25%;
 }
 
 h1 {
-    font-size: 3rem;
+    font-size: 2.8rem;
     margin: 0;
+    color: var(--gold-color);
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.4);
+    letter-spacing: 2px;
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+}
+
+h1::before, h1::after {
+    content: '✧';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
     color: var(--accent-color);
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    opacity: 0.8;
+}
+
+h1::before {
+    left: -40px;
+}
+
+h1::after {
+    right: -40px;
 }
 
 .subtitle {
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin: 10px 0;
-    color: rgba(255, 255, 255, 0.8);
-    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+    letter-spacing: 1px;
 }
 
 .cards-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     height: calc(100vh - 100px);
-    margin-top: -20px;
     position: relative;
+    z-index: 5;
 }
 
 .fan-cards {
     position: relative;
     width: 50%;
-    height: 80%;
+    height: 85%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    perspective: 1000px;
+    perspective: 1200px;
     z-index: 1100;
 }
 
@@ -70,8 +114,8 @@ h1 {
     height: var(--card-height);
     border: 2px solid;
     background-size: cover;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     cursor: pointer;
     transform-origin: center 150%;
     left: 50%;
@@ -83,92 +127,156 @@ h1 {
     -webkit-backface-visibility: hidden;
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                box-shadow 0.3s ease;
     z-index: 1;
+    overflow: hidden;
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.2) 100%);
+    border-radius: 10px;
+    pointer-events: none;
 }
 
 .card[data-card-type="yijing"] {
-    background: linear-gradient(45deg, #2c3e50, #3498db);
-    border-color: #00ffff;
+    background: linear-gradient(45deg, #1a2a3a, #3498db);
+    border-color: var(--accent-color);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 229, 255, 0.5);
 }
 
 .card[data-card-type="spacetime"] {
-    background: linear-gradient(45deg, #4b134f, #c94b4b);
+    background: linear-gradient(45deg, #3a1a3a, #c94b4b);
     border-color: #ff6b6b;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 8px rgba(255, 107, 107, 0.5);
 }
 
 .card[data-card-type="character"] {
-    background: linear-gradient(45deg, #134e5e, #71b280);
+    background: linear-gradient(45deg, #1a3a2a, #71b280);
     border-color: #4cd137;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 8px rgba(76, 209, 55, 0.5);
 }
 
 .card::before {
     content: var(--symbol, '★');
-    font-size: 3em;
+    font-size: 3.5em;
     color: inherit;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
+    opacity: 0.9;
 }
 
 .card[data-card-type="spacetime"]::before {
-    font-size: 4em;
+    font-size: 4.5em;
 }
 
 .card[data-card-type="character"]::before {
-    font-size: 3.5em;
+    font-size: 4em;
 }
 
 .card:hover {
     transform: translate(-50%, -50%) 
                rotate(var(--rotation)) 
                translateY(calc(var(--radius) * 1px))
-               scale(1.2);
-    z-index: 2;
+               scale(1.25);
+    z-index: 100;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px var(--accent-color);
 }
 
-.card:active {
-    /* 移除原本的效果 */
+.card[data-card-type="yijing"]:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 229, 255, 0.7);
+}
+
+.card[data-card-type="spacetime"]:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 107, 107, 0.7);
+}
+
+.card[data-card-type="character"]:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(76, 209, 55, 0.7);
 }
 
 .display-area {
     width: 50%;
-    height: 80%;
+    height: 85%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    gap: 15px;
-    padding: 10px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-    scroll-behavior: smooth;
+    gap: 10px;
+    padding: 15px;
+    overflow: hidden;
+    background: rgba(10, 14, 23, 0.6);
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 5px;
 }
 
 .card-slots-container {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 25px;
+    overflow-y: auto;
+    height: calc(100% - 80px);
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.card-slots-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .card-slots {
     width: 100%;
+    background: rgba(26, 34, 51, 0.5);
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .card-slots h3 {
     text-align: center;
-    margin-bottom: 5px;
-    font-size: 1.1em;
-    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.card-slots h3::before, .card-slots h3::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, currentColor, transparent);
+}
+
+.card-slots h3::before {
+    left: 5%;
+}
+
+.card-slots h3::after {
+    right: 5%;
 }
 
 .yijing-slots h3 {
-    color: #00ffff;
+    color: var(--accent-color);
 }
 
 .spacetime-slots h3 {
@@ -182,56 +290,236 @@ h1 {
 .slots-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 15px;
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 5px;
+    padding: 10px 5px;
 }
 
 .card-slot {
     width: calc(var(--card-width) * 0.8);
     height: calc(var(--card-height) * 0.8);
-    border: 2px dashed var(--accent-color);
+    border: 2px dashed rgba(255, 255, 255, 0.3);
     border-radius: 10px;
-    opacity: 0.5;
+    opacity: 0.6;
     position: relative;
     padding: 0;
     margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.card-slot:hover {
+    opacity: 0.8;
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 .yijing-slots .card-slot {
-    border-color: #00ffff;
+    border-color: rgba(0, 229, 255, 0.4);
 }
 
 .spacetime-slots .card-slot {
-    border-color: #ff6b6b;
+    border-color: rgba(255, 107, 107, 0.4);
 }
 
 .character-slots .card-slot {
-    border-color: #4cd137;
+    border-color: rgba(76, 209, 55, 0.4);
 }
 
 .settings {
     position: fixed;
     bottom: 20px;
     right: 20px;
+    z-index: 1000;
 }
 
 .settings-btn {
-    background: none;
-    border: none;
+    background: rgba(26, 34, 51, 0.7);
+    border: 2px solid var(--accent-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white;
     font-size: 24px;
     cursor: pointer;
-    padding: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+.settings-btn:hover {
+    background: rgba(0, 229, 255, 0.2);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
 }
 
 .sound-off {
     display: none;
+}
+
+/* 遮罩層 */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 14, 23, 0.85);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 1500;
+    display: none;
+    animation: fadeIn 0.3s ease-out;
+    pointer-events: none !important; /* 完全禁用遮罩層的點擊事件攔截 */
+}
+
+.overlay.active {
+    display: block;
+}
+
+/* 抽出的卡片樣式 */
+.card.drawn {
+    position: relative;
+    transform: none;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.card.drawn:hover {
+    transform: scale(1.05);
+    z-index: 10;
+}
+
+/* 卡片內容樣式 */
+.drawn-card-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.drawn-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 8px;
+    background: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    font-size: 0.7em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.drawn-card-name {
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.drawn-card-attribute {
+    padding: 2px 6px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    font-size: 0.8em;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.drawn-card-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.drawn-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.card.drawn:hover .drawn-card-image img {
+    transform: scale(1.05);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    h1::before, h1::after {
+        font-size: 1.5rem;
+    }
+    
+    h1::before {
+        left: -30px;
+    }
+    
+    h1::after {
+        right: -30px;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .cards-container {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+    }
+    
+    .fan-cards, .display-area {
+        width: 100%;
+        height: auto;
+        min-height: 300px;
+    }
+    
+    .fan-cards {
+        margin-bottom: 20px;
+    }
+    
+    .card-type-selector {
+        margin-bottom: 10px;
+    }
+    
+    .type-btn {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .card-slots {
+        padding: 10px;
+    }
+    
+    .slots-row {
+        gap: 10px;
+    }
+    
+    .card-slot {
+        width: calc(var(--card-width) * 0.7);
+        height: calc(var(--card-height) * 0.7);
+    }
+
+    .clear-btn {
+        min-width: 100px !important;
+        padding: 8px 20px !important;
+        font-size: 1em !important;
+    }
 }
 
 /* 優化後的響應式設計：行動裝置模式 */
@@ -396,10 +684,9 @@ h1 {
     }
 
     .clear-btn {
-        min-width: 90px;
-        padding: 8px 15px;
-        font-size: 0.9em;
-        bottom: 10px;
+        padding: 6px 15px !important;
+        font-size: 0.9em !important;
+        min-width: 90px !important;
     }
 }
 
@@ -481,124 +768,189 @@ h1 {
     display: none;
 }
 
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-}
-
-.overlay.active {
-    display: block;
-}
-
 /* 當確認框顯示時，未選中的卡片變暗 */
 .confirming .card:not(.selected) {
-    opacity: 0.3;
+    opacity: 0.2;
+    filter: grayscale(80%);
     pointer-events: none;
+    transform: scale(0.95);
+    transition: all 0.3s ease;
 }
 
 /* 被選中的卡片 */
+.card.selected {
+    transform: translate(-50%, -50%) 
+               rotate(var(--rotation)) 
+               translateY(calc(var(--radius) * 1px))
+               scale(1.3) !important;
+    z-index: 1550 !important;
+    transition: all 0.3s ease;
+    animation: pulse-glow 1.5s infinite alternate;
+    pointer-events: auto !important;
+}
+
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.5); }
+    100% { box-shadow: 0 0 30px 10px rgba(255, 255, 255, 0.8); }
+}
+
 .card.selected[data-card-type="yijing"] {
-    box-shadow: 0 0 30px #00ffff;
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.8);
+    animation: pulse-glow-blue 1.5s infinite alternate;
+}
+
+@keyframes pulse-glow-blue {
+    0% { box-shadow: 0 0 20px 5px rgba(0, 229, 255, 0.5); }
+    100% { box-shadow: 0 0 30px 10px rgba(0, 229, 255, 0.8); }
 }
 
 .card.selected[data-card-type="spacetime"] {
-    box-shadow: 0 0 30px #ff6b6b;
+    box-shadow: 0 0 30px rgba(255, 107, 107, 0.8);
+    animation: pulse-glow-red 1.5s infinite alternate;
+}
+
+@keyframes pulse-glow-red {
+    0% { box-shadow: 0 0 20px 5px rgba(255, 107, 107, 0.5); }
+    100% { box-shadow: 0 0 30px 10px rgba(255, 107, 107, 0.8); }
 }
 
 .card.selected[data-card-type="character"] {
-    box-shadow: 0 0 30px #4cd137;
+    box-shadow: 0 0 30px rgba(76, 209, 55, 0.8);
+    animation: pulse-glow-green 1.5s infinite alternate;
 }
 
+@keyframes pulse-glow-green {
+    0% { box-shadow: 0 0 20px 5px rgba(76, 209, 55, 0.5); }
+    100% { box-shadow: 0 0 30px 10px rgba(76, 209, 55, 0.8); }
+}
+
+/* 確認對話框 */
 .confirm-dialog {
-    position: absolute;
-    background: rgba(0, 0, 0, 0.8);
-    padding: 15px 20px;
-    border-radius: 10px;
+    position: fixed; /* 改為 fixed 定位，避免受父元素影響 */
+    background: rgba(26, 34, 51, 0.95);
+    padding: 20px 25px;
+    border-radius: 15px;
     display: none;
-    z-index: 1200;
+    z-index: 2000; /* 提高 z-index 確保在最上層 */
     left: 50%;
     transform: translateX(-50%);
     bottom: 20%;
     white-space: nowrap;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 229, 255, 0.5);
+    border: 2px solid var(--accent-color);
+    animation: scaleIn 0.3s ease-out;
+    pointer-events: auto !important; /* 確保確認對話框可以接收點擊事件 */
+}
+
+@keyframes scaleIn {
+    from { transform: translateX(-50%) scale(0.8); opacity: 0; }
+    to { transform: translateX(-50%) scale(1); opacity: 1; }
 }
 
 .confirm-dialog.active {
     display: flex;
-    gap: 15px;
+    gap: 20px;
     align-items: center;
-}
-
-.confirm-dialog button {
-    padding: 8px 20px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    font-size: 1em;
-    transition: transform 0.2s ease;
-    position: relative;
-    z-index: 1200;
-}
-
-.confirm-dialog button:hover {
-    transform: scale(1.05);
-}
-
-.confirm-btn {
-    background: #ff6b4a;
-    color: white;
-}
-
-.cancel-btn {
-    background: #808080;
-    color: black;
 }
 
 .confirm-dialog span {
     color: white;
     position: relative;
-    z-index: 1200;
+    z-index: 1600;
+    font-size: 1.2em;
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    font-weight: bold;
+    letter-spacing: 1px;
+    pointer-events: auto;
 }
 
-.clear-btn {
-    position: fixed;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
+.confirm-dialog button {
     padding: 10px 25px;
-    font-size: 1.1em;
-    background: #ff4757;
-    color: white;
-    border: none;
-    border-radius: 5px;
+    border-radius: 25px;
+    border: 2px solid;
     cursor: pointer;
+    font-size: 1em;
     transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(255, 71, 87, 0.3);
-    z-index: 1000;
-    margin: 0;
-    width: auto;
-    min-width: 120px;
-    text-align: center;
+    position: relative;
+    z-index: 1600;
+    background: rgba(26, 34, 51, 0.7);
+    overflow: hidden;
+    pointer-events: auto !important;
+}
+
+.confirm-dialog button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.5s ease;
+}
+
+.confirm-dialog button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.confirm-dialog button:hover::before {
+    left: 100%;
+}
+
+.confirm-btn {
+    background: rgba(0, 229, 255, 0.2) !important;
+    color: white !important;
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+.confirm-btn:hover {
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.5) !important;
+}
+
+.cancel-btn {
+    color: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* 重置按鈕樣式，確保位置正確 */
+.clear-btn {
+    position: relative !important;
+    padding: 10px 25px !important;
+    background: #ff4757 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    font-size: 1.1em !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 0 10px rgba(255, 71, 87, 0.3) !important;
+    z-index: 1000 !important;
+    margin: 5px auto 0 auto !important;
+    width: auto !important;
+    min-width: 120px !important;
+    text-align: center !important;
+    display: block !important;
+    transform: none !important;
+    bottom: auto !important;
+    left: auto !important;
 }
 
 .clear-btn:hover {
-    transform: translateX(-50%) scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.5) !important;
 }
 
 .clear-btn:active {
-    transform: translateX(-50%) scale(0.95);
+    transform: scale(0.95) !important;
 }
 
 .clear-btn:disabled {
-    background: #666;
-    cursor: not-allowed;
-    transform: translateX(-50%);
-    box-shadow: none;
+    background: #666 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
 }
 
 /* 卡片詳細視圖 */
@@ -608,16 +960,24 @@ h1 {
     left: 0;
     width: 100%;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.95);
+    background: rgba(10, 14, 23, 0.95);
     z-index: 2000;
     display: none;
     overflow-y: auto;
     padding: 20px;
     box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .card-detail-view.active {
     display: block;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .card-detail-content {
@@ -626,6 +986,34 @@ h1 {
     padding: 20px;
     color: white;
     position: relative;
+}
+
+.close-detail-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--accent-color);
+    font-size: 2.5em;
+    cursor: pointer;
+    z-index: 2100;
+    transition: all 0.3s ease;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.close-detail-btn:hover {
+    transform: scale(1.1);
+    color: white;
+    background: rgba(0, 229, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
 }
 
 .scroll-hint {
@@ -638,6 +1026,7 @@ h1 {
     animation: pulse 2s infinite;
     margin: 20px 0;
     position: relative;
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
 }
 
 .scroll-hint::after {
@@ -676,13 +1065,25 @@ h1 {
     width: 400px;
     height: 600px;
     margin: 0 auto 20px;
-    background: linear-gradient(45deg, #2c3e50, #3498db);
+    background: linear-gradient(45deg, #1a2a3a, #3498db);
     border: 4px solid var(--accent-color);
     border-radius: 20px;
     position: relative;
     font-size: 6em;
     color: white;
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+    overflow: hidden;
+}
+
+.card-detail-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.2) 100%);
+    pointer-events: none;
 }
 
 .card-detail-image .inner-content {
@@ -694,69 +1095,412 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
 }
 
 .card-detail-text {
     font-size: 1.2em;
-    line-height: 1.4;
-    white-space: pre-line;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    line-height: 1.5;
+    white-space: normal;
+    padding: 25px;
+    background: rgba(26, 34, 51, 0.7);
+    border-radius: 15px;
     margin-top: 20px;
     scroll-margin-top: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Markdown 樣式 */
 .card-detail-text h1 {
-    color: var(--accent-color);
+    color: var(--gold-color);
     font-size: 1.8em;
-    margin-bottom: 0.3em;
+    margin: 0 auto 0.5em;
     border-bottom: 2px solid var(--accent-color);
-    padding-bottom: 0.2em;
+    padding-bottom: 0.3em;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    width: 100%; /* 確保標題寬度為100%，能夠正確居中 */
+}
+
+/* 確保星形符號正確顯示 */
+.card-detail-text h1::before, 
+.card-detail-text h1::after {
+    position: static; /* 取消絕對定位 */
+    display: inline-block;
+    margin: 0 10px;
+    transform: none; /* 移除變換效果 */
+    vertical-align: middle;
 }
 
 .card-detail-text h2 {
     color: var(--accent-color);
-    font-size: 1.4em;
-    margin-top: 1em;
-    margin-bottom: 0.3em;
-}
-
-.card-detail-text ul, 
-.card-detail-text ol {
-    margin-left: 1.2em;
-    margin-bottom: 0.8em;
-}
-
-.card-detail-text li {
-    margin-bottom: 0.3em;
-    line-height: 1.4;
-}
-
-.card-detail-text p {
-    margin-bottom: 0.8em;
-    line-height: 1.4;
+    font-size: 1.5em;
+    margin-top: 1.2em;
+    margin-bottom: 0.5em;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
 }
 
 .card-detail-text strong {
     color: var(--accent-color);
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 229, 255, 0.3);
 }
 
-.close-detail-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 2em;
-    cursor: pointer;
-    z-index: 2001;
+.card-detail-text ul, 
+.card-detail-text ol {
+    margin-left: 1.5em;
+    margin-bottom: 1em;
 }
 
-.close-detail-btn:hover {
+.card-detail-text li {
+    margin-bottom: 0.5em;
+    line-height: 1.5;
+    position: relative;
+}
+
+.card-detail-text ul li::before {
+    content: '✧';
     color: var(--accent-color);
+    position: absolute;
+    left: -1.2em;
+    opacity: 0.8;
+}
+
+.card-detail-text p {
+    margin-bottom: 0.5em;
+    line-height: 1.5;
+}
+
+/* 完整卡片視圖 */
+.full-card-view {
+    width: 400px;
+    max-width: 100%;
+    margin: 0 auto 20px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 229, 255, 0.5);
+    background: #1a2a3a;
+    border: 3px solid var(--accent-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.full-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    position: relative;
+    z-index: 5;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.3);
+}
+
+.full-card-number {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.full-card-attribute {
+    padding: 5px 15px 5px 12px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    font-size: 1em;
+    min-width: 120px;
+    text-align: right;
+    white-space: nowrap;
+    overflow: visible;
+    flex-shrink: 0;
+    margin-left: 10px;
+    position: relative;
+    z-index: 5;
+    right: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.full-card-image {
+    width: 100%;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.full-card-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.2) 100%);
+    pointer-events: none;
+}
+
+.full-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.full-card-image:hover img {
+    transform: scale(1.05);
+}
+
+.full-card-words {
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    font-style: italic;
+    text-align: center;
+    width: 100%;
+    color: var(--gold-color);
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+    border-top: 1px solid rgba(0, 229, 255, 0.3);
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .full-card-view {
+        width: 100%;
+    }
+    
+    .full-card-image {
+        height: 300px;
+    }
+    
+    .card-detail-image {
+        width: 280px;
+        height: 420px;
+        font-size: 4em;
+    }
+    
+    .full-card-header {
+        padding: 10px;
+    }
+    
+    .full-card-number {
+        font-size: 1.1em;
+        max-width: 60%;
+    }
+    
+    .full-card-attribute {
+        padding: 3px 15px 3px 12px;
+        font-size: 0.9em;
+        min-width: 100px;
+        right: 5px;
+    }
+    
+    .close-detail-btn {
+        top: 5px;
+        right: 5px;
+        font-size: 2em;
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-detail-content {
+        padding: 10px;
+    }
+    
+    .full-card-image {
+        height: 250px;
+    }
+    
+    .card-detail-image {
+        width: 200px;
+        height: 300px;
+        font-size: 3em;
+    }
+    
+    .full-card-number {
+        font-size: 1em;
+    }
+    
+    .full-card-attribute {
+        font-size: 0.8em;
+        min-width: 90px;
+    }
+    
+    .card-detail-text {
+        font-size: 1em;
+        padding: 15px;
+    }
+}
+
+/* 易經卦卡樣式 */
+.yijing-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: rgba(0, 0, 0, 0.7);
+    width: 100%;
+}
+
+.card-name {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: white;
+}
+
+.card-attribute {
+    font-size: 0.9em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.card-image-container {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.card-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-words {
+    padding: 10px 15px;
+    background: rgba(0, 0, 0, 0.7);
+    font-style: italic;
+    text-align: center;
+    width: 100%;
+}
+
+/* 抽出的卡片樣式 */
+.drawn-card-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.drawn-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    font-size: 0.7em;
+}
+
+.drawn-card-name {
+    font-weight: bold;
+    color: white;
+}
+
+.drawn-card-attribute {
+    padding: 2px 4px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.5);
+    font-size: 0.8em;
+}
+
+.drawn-card-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.drawn-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 扇形卡片中的迷你信息 */
+.card-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: none;
+}
+
+.card-mini-header {
+    background: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    padding: 3px;
+    font-size: 0.6em;
+    text-align: center;
+}
+
+.card-mini-name {
+    font-weight: bold;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-mini-attribute {
+    font-size: 0.8em;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+    .card-header {
+        padding: 5px 10px;
+    }
+    
+    .card-name {
+        font-size: 1em;
+    }
+    
+    .card-attribute {
+        font-size: 0.8em;
+        padding: 2px 5px;
+    }
+    
+    .card-image-container {
+        height: 200px;
+    }
+    
+    .card-words {
+        padding: 5px 10px;
+        font-size: 0.9em;
+    }
 }
 
 /* 卡片類型選擇區域 */
@@ -944,5 +1688,38 @@ h1 {
     }
     .card-detail-text {
         font-size: 1em;
+    }
+}
+
+.scroll-indicator {
+    text-align: center;
+    margin: 0;
+    color: var(--accent-color);
+    opacity: 1;
+    font-size: 1.6rem;
+    animation: pulse-arrow 1.5s infinite;
+    position: relative;
+    height: 20px;
+    z-index: 10;
+    line-height: 1;
+}
+
+.scroll-indicator span {
+    display: inline-block;
+    text-shadow: 0 0 12px var(--accent-color), 0 0 20px var(--accent-color);
+}
+
+@keyframes pulse-arrow {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-7px);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
     }
 } 

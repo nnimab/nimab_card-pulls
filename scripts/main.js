@@ -40,6 +40,51 @@ const cardDescriptions = {
     character: {}
 };
 
+// 易經卦卡資料緩存
+const yijingCardData = {};
+
+// 加載易經卦卡資料
+async function loadYijingCardData() {
+    try {
+        // 使用JSON文件而不是Excel文件
+        const response = await fetch('易經卡基本資料.json');
+        if (!response.ok) {
+            throw new Error('無法載入易經卦卡資料');
+        }
+        
+        // 解析JSON數據
+        const cardDataArray = await response.json();
+        
+        // 處理每一條卡片數據
+        cardDataArray.forEach(card => {
+            // 從卦名中提取卦號
+            const match = card.卦名.match(/(\d+)/);
+            if (match) {
+                const cardNumber = parseInt(match[1]);
+                
+                // 存儲卡片數據
+                yijingCardData[cardNumber] = {
+                    number: match[1],
+                    name: card.卦名,
+                    attribute: card.屬性,
+                    yinYang: card.陰陽,
+                    words: card.卦詞
+                };
+            }
+        });
+        
+        console.log('成功載入易經卦卡資料:', Object.keys(yijingCardData).length, '張卡片');
+    } catch (error) {
+        console.error('載入易經卦卡資料時出錯：', error);
+    }
+}
+
+// 獲取卡片圖片路徑
+function getCardImagePath(cardNumber) {
+    // 簡化的路徑處理，假設所有資料夾都是純數字，所有圖片都命名為01.png
+    return [`images/yijing/${cardNumber}/01.png`];
+}
+
 // 加載卡片描述
 async function loadCardDescription(cardNumber, cardType) {
     // 如果已經在緩存中，直接返回
@@ -87,6 +132,13 @@ function showConfirmDialog() {
     confirmDialog.classList.add('active');
     overlay.classList.add('active');
     fanCardsContainer.classList.add('confirming');
+    
+    // 確保確認和取消按鈕可以接收點擊事件
+    confirmBtn.style.pointerEvents = 'auto';
+    cancelBtn.style.pointerEvents = 'auto';
+    
+    // 將確認對話框移到 body 的最後，確保它不受其他元素的影響
+    document.body.appendChild(confirmDialog);
 }
 
 // 隱藏確認框
@@ -98,6 +150,9 @@ function hideConfirmDialog() {
         selectedCard.classList.remove('selected');
         selectedCard = null;
     }
+    
+    // 將確認對話框放回原位
+    fanCardsContainer.appendChild(confirmDialog);
 }
 
 // 計算扇形分布
@@ -170,7 +225,44 @@ function handleCardDraw(event) {
             displayCard.dataset.cardType = currentCardType;
             displayCard.dataset.cardNumber = drawnCard; // 保存卡片編號
             displayCard.dataset.originalType = currentCardType; // 保存原始卡片類型
-            displayCard.textContent = drawnCard;
+            
+            // 如果是易經卦卡，使用圖片和更多信息
+            if (currentCardType === 'yijing') {
+                const cardData = yijingCardData[drawnCard] || {
+                    number: drawnCard,
+                    name: `卦象${drawnCard}`,
+                    attribute: '未知',
+                    yinYang: '未知'
+                };
+                
+                // 根據陰陽屬性設置顏色
+                const yinYangColor = cardData.yinYang === '陰' ? '#3498db' : '#f1c40f';
+                
+                // 設置五行屬性顏色為白色
+                let attributeColors = [];
+                cardData.attribute.split('').forEach(attr => {
+                    attributeColors.push('#ffffff');
+                });
+                
+                // 獲取卡片圖片路徑
+                const imagePaths = getCardImagePath(drawnCard);
+                
+                displayCard.innerHTML = `
+                    <div class="drawn-card-content">
+                        <div class="drawn-card-header">
+                            <div class="drawn-card-name">${cardData.name}</div>
+                            <div class="drawn-card-attribute" style="color: ${attributeColors[0] || '#ffffff'};">${cardData.yinYang} | ${cardData.attribute}</div>
+                        </div>
+                        <div class="drawn-card-image">
+                            <img src="${imagePaths[0]}" alt="${cardData.name}" onerror="if (this.getAttribute('data-tried') === null) { this.setAttribute('data-tried', '0'); } let tried = parseInt(this.getAttribute('data-tried')); if (tried < ${imagePaths.length - 1}) { this.setAttribute('data-tried', tried + 1); this.src='${imagePaths[1] || ''}'; } else if (tried === ${imagePaths.length - 1}) { this.onerror = null; this.src='images/yijing/1/0_1.png'; }">
+                        </div>
+                    </div>
+                `;
+            } else {
+                // 其他類型卡片使用原來的顯示方式
+                displayCard.textContent = drawnCard;
+            }
+            
             displayCard.style.background = CARDS_CONFIG[currentCardType].gradient;
             displayCard.style.borderColor = CARDS_CONFIG[currentCardType].color;
             
@@ -204,14 +296,65 @@ async function createDetailView(cardNumber, cardType) {
     // 將 Markdown 轉換為 HTML
     const htmlContent = marked.parse(description);
 
-    const content = `
-        <button class="close-detail-btn" style="color: ${CARDS_CONFIG[cardType].color}">&times;</button>
-        <div class="card-detail-content">
+    let cardContent = '';
+    
+    // 如果是易經卦卡，使用完整的卡片顯示
+    if (cardType === 'yijing') {
+        // 獲取卡片數據
+        const cardData = yijingCardData[cardNumber] || {
+            number: cardNumber,
+            name: `卦象${cardNumber}`,
+            attribute: '未知',
+            yinYang: '未知',
+            words: '無卦詞'
+        };
+        
+        // 根據陰陽屬性設置顏色
+        const yinYangColor = cardData.yinYang === '陰' ? '#3498db' : '#f1c40f';
+        
+        // 設置五行屬性顏色為白色
+        let attributeColors = [];
+        cardData.attribute.split('').forEach(attr => {
+            attributeColors.push('#ffffff');
+        });
+        
+        // 獲取卡片圖片路徑
+        const imagePaths = getCardImagePath(cardNumber);
+        
+        // 創建完整卡片視圖，類似於您提供的圖片
+        cardContent = `
+            <div class="full-card-view">
+                <div class="full-card-header">
+                    <div class="full-card-number">${cardNumber} ${cardData.name.replace(/^\d+\s*/, '')}</div>
+                    <div class="full-card-attribute">
+                        <span style="color: ${yinYangColor};">${cardData.yinYang}</span> | 
+                        <span style="color: ${attributeColors[0] || '#ffffff'};">${cardData.attribute.charAt(0) || ''}</span>
+                        <span style="color: ${attributeColors[1] || '#ffffff'};">${cardData.attribute.charAt(1) || ''}</span>
+                    </div>
+                </div>
+                <div class="full-card-image">
+                    <img src="${imagePaths[0]}" alt="${cardData.name}" onerror="if (this.getAttribute('data-tried') === null) { this.setAttribute('data-tried', '0'); } let tried = parseInt(this.getAttribute('data-tried')); if (tried < ${imagePaths.length - 1}) { this.setAttribute('data-tried', tried + 1); this.src='${imagePaths[1] || ''}'; } else if (tried === ${imagePaths.length - 1}) { this.onerror = null; this.src='images/yijing/1/0_1.png'; }">
+                </div>
+                <div class="full-card-words">${cardData.words}</div>
+            </div>
+            <div class="scroll-hint" style="color: ${CARDS_CONFIG[cardType].color}">下滑查看更多資訊</div>
+            <div class="card-detail-text" id="cardDescription" style="--accent-color: ${CARDS_CONFIG[cardType].color}">${htmlContent}</div>
+        `;
+    } else {
+        // 其他類型卡片使用原來的顯示方式
+        cardContent = `
             <div class="card-detail-image" data-card-type="${cardType}" style="background: ${CARDS_CONFIG[cardType].gradient}; border-color: ${CARDS_CONFIG[cardType].color}; box-shadow: 0 0 30px ${CARDS_CONFIG[cardType].color};">
                 <div class="inner-content">${cardNumber}</div>
             </div>
             <div class="scroll-hint" style="color: ${CARDS_CONFIG[cardType].color}">下滑查看更多資訊</div>
             <div class="card-detail-text" id="cardDescription" style="--accent-color: ${CARDS_CONFIG[cardType].color}">${htmlContent}</div>
+        `;
+    }
+
+    const content = `
+        <button class="close-detail-btn" style="color: ${CARDS_CONFIG[cardType].color}">&times;</button>
+        <div class="card-detail-content">
+            ${cardContent}
         </div>
     `;
     cardDetailView.innerHTML = content;
@@ -230,24 +373,26 @@ async function createDetailView(cardNumber, cardType) {
     const scrollHint = cardDetailView.querySelector('.scroll-hint');
     const cardDescription = cardDetailView.querySelector('#cardDescription');
     
-    scrollHint.addEventListener('click', () => {
-        cardDescription.scrollIntoView({ 
-            behavior: 'smooth',
-            block: 'start'
+    if (scrollHint && cardDescription) {
+        scrollHint.addEventListener('click', () => {
+            cardDescription.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
         });
-    });
 
-    // 監聽滾動事件來控制提示的顯示
-    cardDetailView.addEventListener('scroll', () => {
-        const scrollPosition = cardDetailView.scrollTop;
-        if (scrollPosition > 100) {
-            scrollHint.style.opacity = '0';
-            scrollHint.style.pointerEvents = 'none';
-        } else {
-            scrollHint.style.opacity = '0.8';
-            scrollHint.style.pointerEvents = 'auto';
-        }
-    });
+        // 監聽滾動事件來控制提示的顯示
+        cardDetailView.addEventListener('scroll', () => {
+            const scrollPosition = cardDetailView.scrollTop;
+            if (scrollPosition > 100) {
+                scrollHint.style.opacity = '0';
+                scrollHint.style.pointerEvents = 'none';
+            } else {
+                scrollHint.style.opacity = '0.8';
+                scrollHint.style.pointerEvents = 'auto';
+            }
+        });
+    }
 
     // 修改 Markdown 樣式中的顏色
     const markdownElements = cardDetailView.querySelectorAll('.card-detail-text h1, .card-detail-text h2, .card-detail-text strong');
@@ -265,6 +410,8 @@ async function createDetailView(cardNumber, cardType) {
 // 添加確認和取消按鈕的事件監聽器
 confirmBtn.addEventListener('click', (e) => {
     e.stopPropagation(); // 防止事件冒泡
+    e.preventDefault(); // 防止默認行為
+    console.log('確認按鈕被點擊');
     if (selectedCard) {
         handleCardDraw({ target: selectedCard });
         hideConfirmDialog();
@@ -273,17 +420,12 @@ confirmBtn.addEventListener('click', (e) => {
 
 cancelBtn.addEventListener('click', (e) => {
     e.stopPropagation(); // 防止事件冒泡
+    e.preventDefault(); // 防止默認行為
+    console.log('取消按鈕被點擊');
     hideConfirmDialog();
 });
 
-// 點擊遮罩層取消
-overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) {
-        hideConfirmDialog();
-    }
-});
-
-// 防止確認框的點擊事件冒泡到遮罩層
+// 防止確認框的點擊事件冒泡
 confirmDialog.addEventListener('click', (e) => {
     e.stopPropagation();
 });
@@ -398,43 +540,18 @@ function initializeFanCards() {
         card.style.setProperty('--radius', spread.radius);
         card.style.setProperty('--symbol', `'${CARDS_CONFIG[currentCardType].symbol}'`);
         card.style.background = CARDS_CONFIG[currentCardType].gradient;
-        card.style.borderColor = CARDS_CONFIG[currentCardType].color;
         
-        // 修改點擊事件
+        // 不在背面顯示資訊，保持原有的星星形狀
+        
+        // 添加點擊事件
         card.addEventListener('click', (e) => {
-            if (!confirmDialog.classList.contains('active')) {
-                selectedCard = e.target;
-                selectedCard.classList.add('selected');
-                showConfirmDialog();
-            }
-        });
-        
-        card.addEventListener('dblclick', (e) => {
-            e.preventDefault();
-            hideConfirmDialog();
-            handleCardDraw(e);
-        });
-        
-        // 添加觸控支援
-        let touchStartTime = 0;
-        let touchTimeout;
-        
-        card.addEventListener('touchstart', (e) => {
-            touchStartTime = Date.now();
-            touchTimeout = setTimeout(() => {
-                handleCardDraw(e);
-            }, 500);
-        });
-        
-        card.addEventListener('touchend', (e) => {
-            clearTimeout(touchTimeout);
-            const touchDuration = Date.now() - touchStartTime;
-            if (touchDuration < 500) {
-                if (Date.now() - lastTapTime < 300) {
-                    handleCardDraw(e);
-                }
-                lastTapTime = Date.now();
-            }
+            if (confirmDialog.classList.contains('active')) return;
+            
+            selectedCard = e.target.closest('.card');
+            if (!selectedCard) return;
+            
+            selectedCard.classList.add('selected');
+            showConfirmDialog();
         });
         
         fanCardsContainer.appendChild(card);
@@ -444,9 +561,51 @@ function initializeFanCards() {
 // 記錄最後一次點擊時間（用於檢測雙擊）
 let lastTapTime = 0;
 
+// 檢查是否需要顯示滾動提示
+function checkScrollIndicator() {
+    const container = document.querySelector('.card-slots-container');
+    const indicator = document.querySelector('.scroll-indicator');
+    
+    if (!container || !indicator) return;
+    
+    // 如果內容高度大於容器高度，顯示滾動提示，否則隱藏
+    if (container.scrollHeight > container.clientHeight) {
+        indicator.style.display = 'block';
+    } else {
+        indicator.style.display = 'none';
+    }
+}
+
+// 在初始化和窗口大小改變時檢查滾動提示
+window.addEventListener('load', checkScrollIndicator);
+window.addEventListener('resize', checkScrollIndicator);
+
+// 點擊滾動提示箭頭時，向下滾動一點
+document.querySelector('.scroll-indicator')?.addEventListener('click', function() {
+    const container = document.querySelector('.card-slots-container');
+    if (container) {
+        container.scrollBy({
+            top: 100,
+            behavior: 'smooth'
+        });
+    }
+});
+
 // 初始化
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // 載入易經卦卡資料
+    await loadYijingCardData();
+    
+    // 初始化卡片類型選擇器
     initializeCardTypeSelector();
+    
+    // 初始化扇形卡牌
     initializeFanCards();
+    
+    // 初始化清除按鈕狀態
     updateClearButtonState();
+    
+    // 設置音效按鈕初始狀態
+    toggleSoundBtn.querySelector('.sound-on').style.display = 'inline';
+    toggleSoundBtn.querySelector('.sound-off').style.display = 'none';
 }); 
