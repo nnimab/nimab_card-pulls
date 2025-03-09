@@ -5,6 +5,17 @@
 格式基於 [Keep a Changelog](https://keepachangelog.com/zh-TW/1.0.0/)，
 並且本專案遵循 [語意化版本](https://semver.org/lang/zh-TW/)。
 
+## [2.1.5] - 2024-03-09
+
+### 新增
+- 添加 GitHub Actions 工作流程，實現自動化部署
+- 修改了以下檔案：
+  - 新增 `.github/workflows/deploy.yml`: 設置自動部署工作流
+
+### 優化
+- 重新部署項目到 GitHub Pages
+- 確保所有最新變更都已提交並推送
+
 ## [2.1.4] - 2023-03-09
 
 ### 優化
