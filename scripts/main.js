@@ -266,10 +266,18 @@ function handleCardDraw(event) {
                 // 獲取卡片圖片路徑
                 const imagePaths = getCardImagePath(drawnCard);
                 
+                // 提取卦號和卦名
+                const cardNameParts = cardData.name.match(/^(\d+)\s*(.+)$/);
+                const cardNumber = cardNameParts ? cardNameParts[1] : drawnCard;
+                const cardNameOnly = cardNameParts ? cardNameParts[2] : cardData.name;
+                
                 displayCard.innerHTML = `
                     <div class="drawn-card-content">
                         <div class="drawn-card-header">
-                            <div class="drawn-card-name">${cardData.name}</div>
+                            <div class="drawn-card-name">
+                                <div class="card-number">${cardNumber}</div>
+                                <div class="card-name-only">${cardNameOnly}</div>
+                            </div>
                             <div class="drawn-card-attribute">
                                 <span style="color: ${yinYangColor};">${cardData.yinYang}</span> | 
                                 <span style="color: ${attributeColors[0] || '#ffffff'};">${cardData.attribute.charAt(0) || ''}</span>

@@ -5,6 +5,40 @@
 格式基於 [Keep a Changelog](https://keepachangelog.com/zh-TW/1.0.0/)，
 並且本專案遵循 [語意化版本](https://semver.org/lang/zh-TW/)。
 
+## [2.1.4] - 2023-03-09
+
+### 優化
+- 縮小放置區卡片右上角的屬性和陰陽顯示區域，提高整體布局平衡
+- 修改了以下檔案：
+  - `styles/main.css`: 修改 `.drawn-card-attribute` 樣式，將字體大小從 0.8em 減小到 0.65em
+  - `styles/main.css`: 減小內邊距，從 2px 6px 縮小到 1px 3px
+  - `styles/main.css`: 統一兩處 `.drawn-card-attribute` 樣式定義
+
+## [2.1.3] - 2023-03-09
+
+### 優化
+- 改進放置區卡片的卦象名稱顯示方式，將卦號和卦名分成兩行顯示
+- 修改了以下檔案：
+  - `scripts/main.js`: 重構卡片名稱生成方式，分別生成卦號和卦名元素
+  - `styles/main.css`: 添加 `.card-number` 和 `.card-name-only` 樣式，支持兩行顯示
+  - `styles/main.css`: 修改 `.drawn-card-name` 樣式，使用 flex 布局實現垂直排列
+
+## [2.1.2] - 2023-03-09
+
+### 優化
+- 縮小放置區卡片上的卦象名稱字體大小，提升視覺平衡
+- 修改了以下檔案：
+  - `styles/main.css`: 為 `.drawn-card-name` 添加 `font-size: 0.75em` 設定，使卡片名稱字體變小
+
+## [2.1.1] - 2023-03-09
+
+### 優化
+- 放大所有卡片背面的圖案尺寸，使其更加明顯和精緻
+- 修改了以下檔案：
+  - `styles/main.css`: 將一般卡片背面的圖案從 70px x 70px 增加到 85px x 85px
+  - `styles/main.css`: 將易經卦卡背面的圖案從 65px x 65px 增加到 80px x 80px
+  - `styles/main.css`: 將人物卡背面的圖案從 60px x 60px 增加到 75px x 75px
+
 ## [2.1.0] - 2023-03-09
 
 ### 重大更新
