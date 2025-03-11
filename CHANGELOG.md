@@ -5,6 +5,77 @@
 格式基於 [Keep a Changelog](https://keepachangelog.com/zh-TW/1.0.0/)，
 並且本專案遵循 [語意化版本](https://semver.org/lang/zh-TW/)。
 
+## [2.2.5] - 2024-08-07
+
+### 維護
+- 強制推送項目到 GitHub 倉庫
+- 同步所有本地更改，確保線上版本與本地版本一致
+- 更新了所有卡片描述和圖像文件
+- 新增 `generate_yijing_cards.py` 腳本到版本控制系統
+- 修改了以下檔案：
+  - 所有 `card-descriptions/yijing/*.md` 文件：更新易經卡描述內容
+  - `index.html`：優化網頁結構和內容
+  - `styles/main.css`：改進樣式和視覺效果
+  - `scripts/main.js`：提升功能和交互體驗
+
+## [2.2.4] - 2024-07-09
+
+### 優化
+- 減少卡片描述顯示時的行間距，使內容更加緊湊易讀
+- 修改了以下檔案：
+  - `styles/main.css`: 將段落行高從1.5降低到1.3
+  - `styles/main.css`: 縮小段落間底部邊距從0.5em降低到0.3em
+  - `styles/main.css`: 減少列表項的間距從0.5em降低到0.3em
+  - `styles/main.css`: 調整標題底部邊距，從0.5em降低到0.3em
+  - `styles/main.css`: 縮小列表底部邊距從1em降低到0.6em
+
+## [2.2.3] - 2024-07-09
+
+### 優化
+- 減少卡片描述中行與行之間的間距，使內容更加緊湊
+- 修改了以下檔案：
+  - `generate_yijing_cards.py`: 修改五行解析文本格式，從雙換行改為單換行
+  - `generate_yijing_cards.py`: 優化生成的Markdown文件格式，減少不必要的空白行
+  - `generate_yijing_cards.py`: 調整各部分標題與內容的排版，提高閱讀流暢度
+
+## [2.2.2] - 2024-07-09
+
+### 新增
+- 新增五行解析功能，為每個卦象提供詳細的五行屬性分析
+- 修改了以下檔案：
+  - `generate_yijing_cards.py`: 添加五行對應表和分析函數
+  - `generate_yijing_cards.py`: 增加解析屬性字符串的功能
+  - `generate_yijing_cards.py`: 添加五行元素關係（相生相剋）分析
+  - `generate_yijing_cards.py`: 在生成的Markdown文件中添加「五行解析」部分
+  - `generate_yijing_cards.py`: 在AI提示中加入五行信息，提升生成內容相關性
+
+## [2.2.1] - 2024-07-09
+
+### 優化
+- 改進易經卦象生成工具，利用JSON數據中的「直譯」和「象徵」欄位提升生成內容質量
+- 修改了以下檔案：
+  - `generate_yijing_cards.py`: 更新生成函數參數，接受直譯和象徵欄位
+  - `generate_yijing_cards.py`: 增強AI提示，包含更多卦象信息
+  - `generate_yijing_cards.py`: 在生成的Markdown文件中添加直譯和象徵部分
+
+## [2.2.0] - 2024-07-09
+
+### 修改
+- 將易經卦象生成工具從Google Gemini API更改為OpenAI GPT-4o模型
+- 修改數據來源從Excel文件改為JSON文件
+- 修改了以下檔案：
+  - `generate_yijing_cards.py`: 將API請求改為使用OpenAI Chat Completions API
+  - `generate_yijing_cards.py`: 添加`--model`參數，允許指定OpenAI模型
+  - `generate_yijing_cards.py`: 修改數據讀取方式，支持從「易經卡基本資料.json」讀取卦象資訊
+  - `generate_yijing_cards.py`: 更新錯誤處理和資料解析邏輯，適配JSON格式
+
+## [2.1.6] - 2024-03-10
+
+### 修復
+- 修復 GitHub Pages 網站被重定向到個人部落格的問題
+- 修改了以下檔案：
+  - `.github/workflows/deploy.yml`: 設置 `cname: ""` 以明確禁用自定義域名
+
 ## [2.1.5] - 2024-03-09
 
 ### 新增

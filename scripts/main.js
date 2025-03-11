@@ -82,7 +82,7 @@ async function loadYijingCardData() {
 // 獲取卡片圖片路徑
 function getCardImagePath(cardNumber) {
     // 簡化的路徑處理，假設所有資料夾都是純數字，所有圖片都命名為01.png
-    return [`images/yijing/${cardNumber}/01.png`];
+    return [`images/yijing/${cardNumber}.png`];
 }
 
 // 加載卡片描述
